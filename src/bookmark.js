@@ -29,18 +29,18 @@ function editButton() {
 
 function filterButton(){
     $('.header').on('click', '.filter-start', () => {
-        let changeState = {filter: !store.states.filter};
-        Object.assign(store.states, changeState);
+        store.states.filter = !store.states.filter;
         render();
     });
 }
 
 function filterSelect(){
-    $('main').on('click', 'option', e =>{
-        console.log('hello');
-        $('filter-option').prop('selected', false);
-        $(e.currentTarget).prop('selected', true);
-        render();
+    $('main').on('change', '#filter', (e) =>{
+        console.log();
+        store.states.filterVal = $('option:selected').val();
+        console.log(store.states.filterVal);
+        //$('filter-option').prop('selected', false);
+        //$(e.currentTarget).prop('selected', true);
     });
 }
 
@@ -130,15 +130,20 @@ function generateItemHtml(item) {
 
 function generateFilterHtml() {
     if (store.states.filter){
+        let filterArr = [];
+        for (let i = 0; i < 6; i++){
+            if (i == store.states.filterVal){
+                filterArr.push(`<option class='filter-option' value="${i}" selected>${i}</option>`);
+            } else {
+                filterArr.push(`<option class='filter-option' value="${i}">${i}</option>`);
+            }
+        }
+        let optionStr = filterArr.join('');
+
         return `<section class="bookmark-filter">
     <label for="filter">Filter Bookmarks: Minimum Rating</label>
-    <select name="filter" id="filter">
-        <option class='filter-option' value="0">0 Stars</option>
-        <option class='filter-option' value="1">1 Star</option>
-        <option class='filter-option' value="2">2 Stars</option>
-        <option class='filter-option' value="3">3 Stars</option>
-        <option class='filter-option' value="4">4 Stars</option>
-        <option class='filter-option' value="5">5 Stars</option>
+    <select name="filter" id="filter" value="3">
+        ${optionStr}
        </select>
       </section>`;
     } 
@@ -156,6 +161,7 @@ function render() {
     $('.filter-controls').append(generateFilterHtml())
     $('.bookmark-main').empty();
     $('.bookmark-main').append(htmlRender);
+    console.log(store.states.filterVal);
 }
 
 
