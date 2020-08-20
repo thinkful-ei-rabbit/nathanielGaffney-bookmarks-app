@@ -6,32 +6,38 @@
     <title>Document</title>
 </head>
 <body>
-    <header>
+    <header class="header">
         <h1>My Bookmarks</h1>
-        <button>Filter</button>
-        <button>Add</button>
+        <button class="filter-start" id="filter-start">Filter</button>
+        <button id="add-new">Add</button>
     </header>
     <main>
+        <section class="filter-controls">
 
-        <section class="bookmark-filter">
-            <h3>Filter Bookmarks: Minimum Rating</h3>
-            <input type="text" placeholder="0">
-            <button>Filter</button>
         </section>
 
         <section class="bookmark-new">
             <section class="new-title">
-                <input type="text" placeholder="input title">
-                <input type="text" placeholder="rating">
+                <label for="new-title-input">Title:</label>
+                <input type="text" id="new-title-input" placeholder="input title">
+                <label for="rate-new">Rating:</label>
+                <select name="rate-new" id="rate-new">
+                    <option value="0">0 Stars</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
             </section>
             <section class="new-dropdown">
                 <div class="new-description">
-                    <h3>Description</h3>
-                    <input type="text" placeholder="input description">
+                    <label for="new-dropdown-description">Description:</label>
+                    <textarea id="new-dropdown-description" placeholder="input description"></textarea>
                 </div>
                 <div class="new-url">
-                    <h3>Visit Site:</h3>
-                    <input type="text" placeholder="input url">
+                    <label for="new-dropdown-url">Visit Site:</label>
+                    <input type="text" id="new-dropdown-url" placeholder="input url">
                 </div>
                 <div class="new-control">
                     <button>Save Bookmark</button>
@@ -40,56 +46,68 @@
             </section>
         </section>
 
-
-        <section class="bookmark-item">
-
-
-            <section class="bookmark-title">
-                <h2>Website Name</h2>
-                <h2>Rating</h2>
-            </section>
+        <section class="bookmark-main">
 
 
-            <section class="bookmark-dropdown">
-                <div class="dropdown-description">
-                    <h3>Description</h3>
-                    <p>Google is cool search engine do things and stuff.</p>
-                </div>
-                <div class="dropdown-url">
-                    <h3>Visit Site:</h3>
-                    <p>link</p>
-                </div>
-                <div class="dropdown-control">
-                    <button>Edit Bookmark</button>
-                    <button>Remove Bookmark</button>
-                </div>
-            </section>
+            <section class="bookmark-item">
 
 
-            <section class="bookmark-edit">
-                <section class="edit-title">
-                    <input type="text" placeholder="input title">
-                    <input type="text" placeholder="rating">
+                <section class="bookmark-title">
+                    <h2>Website Name</h2>
+                    <h2>Rating</h2>
                 </section>
-                <section class="edit-dropdown">
-                    <div class="edit-description">
+
+
+                <section class="bookmark-dropdown">
+                    <div class="dropdown-description">
                         <h3>Description</h3>
-                        <input type="text" placeholder="input description">
+                        <p>Google is cool search engine do things and stuff.</p>
                     </div>
-                    <div class="edit-url">
+                    <div class="dropdown-url">
                         <h3>Visit Site:</h3>
-                        <input type="text" placeholder="input url">
+                        <a href="https://www.google.com" target="_blank">link</a>
                     </div>
-                    <div class="edit-control">
-                        <button>Save Bookmark</button>
+                    <div class="dropdown-control">
+                        <button>Edit Bookmark</button>
                         <button>Remove Bookmark</button>
                     </div>
                 </section>
+
+
+                <section class="bookmark-edit">
+                    <section class="edit-title">
+                        <label for="edit-title-input">Title</label>
+                        <input type="text" id="edit-title-input" placeholder="input title">
+                        <label for="rate-edit">Rating:</label>
+                        <select name="rate-edit" id="rate-edit">
+                            <option value="0">0 Stars</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </section>
+                    <section class="edit-dropdown">
+                        <div class="edit-description">
+                            <label for="edit-dropdown-description">Description:</label>
+                            <textarea id="edit-dropdown-description" placeholder="input description"></textarea>
+                        </div>
+                        <div class="edit-url">
+                            <label for="edit-dropdown-url">Visit Site:</label>
+                            <input type="text" id="edit-dropdown-url" placeholder="input url">
+                        </div>
+                        <div class="edit-control">
+                            <button>Save Bookmark</button>
+                            <button>Remove Bookmark</button>
+                        </div>
+                    </section>
+                </section>
+
+
             </section>
 
-
         </section>
-
 
     </main>
 </body>

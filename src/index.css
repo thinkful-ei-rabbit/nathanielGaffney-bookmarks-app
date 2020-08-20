@@ -10,7 +10,7 @@ header {
 }
 
 .hidden {
-    visibility: hidden;
+    display:none;
 }
 
 .bookmark-filter {

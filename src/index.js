@@ -1,4 +1,12 @@
+import $ from 'jquery';
+
 import './index.css';
+
+import api from './api';
+import store from './store';
+import bookmark from './bookmark';
+
+
 
 //upon start
 //get values from api
@@ -10,37 +18,35 @@ import './index.css';
 //same vales local object
 //render
 
-function filterButton(){
-    //when you click the filter button, the filter section displays
+function getItems(){
+    //call api and get all items stored at server
+    //let items = //result of api call
+    //items.forEach(item => store.addToStore(item));
+    
+    //render
 }
 
+
 function filterSubmit(){
-    //when you click the filter submit button, the value in the
-    //text input is set to display only bookmarks with a rating value
+    //when you click the rating from the list, the value in the
+    //input is used as a condition to display only bookmarks with a rating value
     //that is >= the input
     //items not passing the check are hidden
     //render
 }
 
 function addButton(){
-    //when you click add button, the new section displays
+    //when you click add button, the new section displays or hides based on current state
 }
 
 function addSubmit(){
     //when 'save bookmark' is clicked, an api call takes the input of the form
     //and stores an object to the server
     //if no error, then the same values are used to create a local object
+
+    //edit box for each item must reflect the items current values as placeholder text
+
     //render
-}
-
-function itemButton(){
-    //when the area is clicked reverse the hidden state 
-    //of the description for that item
-}
-
-function editButton (){
-    //when the button is clicked, hide the description and title
-    //un-hide the edit box
 }
 
 function editSubmit(){
@@ -49,3 +55,16 @@ function editSubmit(){
     //the same values are used to update the existing local object
     //render
 }
+
+function main(){
+    //get items from api
+    //for each of those items, add it to the local store
+    //render
+
+    //look at event listeners
+    bookmark.eventHandler();
+    //render
+    bookmark.render();
+}
+
+$(main);
