@@ -1,4 +1,4 @@
-const BASE_URL = 'https://cors-anywhere.herokuapp.com/https://thinkful-list-api.herokuapp.com/nate/bookmarks';
+const BASE_URL = 'https://thinkful-list-api.herokuapp.com/nate/bookmarks';
 
 
 function apiCheckFetch(...args) {

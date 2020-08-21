@@ -75,6 +75,7 @@ function editRemove(){
     $('.bookmark-main').on('click', '.edit-remove, .dropdown-control-remove', (event) => {
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findIndexById(id);
+        api.removeItem(id);
         store.deleteAtIndex(item);
         render();
     });
@@ -164,7 +165,7 @@ function eventHandler() {
 function generateItemHtml(item) {
     if (item.edit) {
         let ratingArr = [];
-        for (let i = 0; i < 6; i++){
+        for (let i = 1; i < 6; i++){
             if (i == item.rating){
                 ratingArr.push(`<option class='edit-option' value="${i}" selected>${i}</option>`);
             } else {
@@ -172,17 +173,17 @@ function generateItemHtml(item) {
             }
         }
         let optionStr = ratingArr.join('');
-        return `<section class="bookmark-item" data-item-id='${item.id}'>
-        <section class="bookmark-edit">
-        <section class="edit-title">
-            <label for="edit-title-input">Title</label>
+        return `<div class="bookmark-item" data-item-id='${item.id}'>
+        <div class="bookmark-edit">
+        <div class="edit-title">
+            <label class="edit-title-label" for="edit-title-input"><h2>Title</h2></label>
             <input type="text" id="edit-title-input" value="${item.title}">
-            <label for="rate-edit">Rating:</label>
+            <label class="edit-rate-label" for="rate-edit"><h3>Rating:</h3></label>
             <select name="rate-edit" id="rate-edit">
                 ${optionStr}
             </select>
-        </section>
-        <section class="edit-dropdown">
+        </div>
+        <div class="edit-dropdown">
             <div class="edit-description">
                 <label for="edit-dropdown-description">Description:</label>
                 <textarea id="edit-dropdown-description" >${item.description}</textarea>
@@ -195,18 +196,18 @@ function generateItemHtml(item) {
                 <button class="edit-save">Save Bookmark</button>
                 <button class="edit-remove">Remove Bookmark</button>
             </div>
-        </section>
-    </section>
-    </section>`
+        </div>
+    </div>
+    </div>`
     } else if (item.expanded) {
         return `<section class="bookmark-item" data-item-id='${item.id}'>
-    <section class="bookmark-title">
+    <div class="bookmark-title">
         <h2>${item.title}</h2>
         <h3>Rating: ${item.rating} out of 5</h3>
-    </section>
+    </div>
 
 
-    <section class="bookmark-dropdown">
+    <div class="bookmark-dropdown">
         <div class="dropdown-description">
             <h3>Description</h3>
             <p>${item.description}</p>
@@ -219,22 +220,23 @@ function generateItemHtml(item) {
             <button class="dropdown-control-edit">Edit Bookmark</button>
             <button class="dropdown-control-remove">Remove Bookmark</button>
         </div>
-    </section>
+    </div>
 
-</section>`;
+</div>`;
     } else {
-        return `<section class="bookmark-item" data-item-id='${item.id}'>
-    <section class="bookmark-title">
+        return `<div class="bookmark-item" data-item-id='${item.id}'>
+    <div class="bookmark-title">
         <h2>${item.title}</h2>
         <h3>Rating: ${item.rating} out of 5</h3>
-    </section>`
+    </div>
+    </div>`
     }
 }
 
 function generateFilterHtml() {
     if (store.states.filter){
         let filterArr = [];
-        for (let i = 0; i < 6; i++){
+        for (let i = 1; i < 6; i++){
             if (i == store.states.filterVal){
                 filterArr.push(`<option class='filter-option' value="${i}" selected>${i}</option>`);
             } else {
@@ -243,32 +245,31 @@ function generateFilterHtml() {
         }
         let optionStr = filterArr.join('');
 
-        return `<section class="bookmark-filter">
+        return `<div class="bookmark-filter">
     <label for="filter">Filter Bookmarks: Minimum Rating</label>
     <select name="filter" id="filter" value="3">
         ${optionStr}
        </select>
-      </section>`;
+      </div>`;
     } 
 }
 
 function generateAddHtml(){
     if (store.states.add){
-        return `<section class="bookmark-new">
-        <section class="new-title">
-            <label for="new-title-input">Title:</label>
+        return `<div class="bookmark-new">
+        <div class="new-title">
+            <label for="new-title-input"><h2>Title:</h2></label>
             <input type="text" id="new-title-input" placeholder="input title">
-            <label for="rate-new">Rating:</label>
+            <label for="rate-new"><h3>Rating:</h3></label>
             <select name="rate-new" id="rate-new">
-                <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
             </select>
-        </section>
-        <section class="new-dropdown">
+        </div>
+        <div class="new-dropdown">
             <div class="new-description">
                 <label for="new-dropdown-description">Description:</label>
                 <textarea id="new-dropdown-description" placeholder="input description"></textarea>
@@ -281,8 +282,8 @@ function generateAddHtml(){
                 <button class="new-save">Save Bookmark</button>
                 <button class="new-cancel">Cancel</button>
             </div>
-        </section>
-    </section>`;
+        </div>
+    </div>`;
     }
 }
 

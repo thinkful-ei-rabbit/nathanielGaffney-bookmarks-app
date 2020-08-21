@@ -1,12 +1,16 @@
-main{
-    background-color: lightslategray;
-}
 
 header {
-    background-color: plum;
+    background-color: #033860;
+    color: #ebebd3;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    align-items: center;
+}
+
+#filter-start, #add-new{
+    height: auto;
 }
 
 .hidden {
@@ -14,7 +18,17 @@ header {
 }
 
 .bookmark-filter {
-    background-color: limegreen;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 125%;
+    background-color: #ebebd3;
+}
+
+.bookmark-filter #filter {
+    padding: 2%;
 }
 
 .bookmark-new {
@@ -25,45 +39,65 @@ header {
 }
 
 .bookmark-item {
-    background-color: lightskyblue;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
 
-.bookmark-title {
-    background-color: lightseagreen;
+.bookmark-title, .edit-title, .new-title {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-shadow: 0 1px 6px black;
+    background-color: #087ca7;
+    color: #ebebd3;
+    border-color: black;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    padding: 2%;
 }
 
-.edit-title {
-    background-color: lightseagreen;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.bookmark-title h2, .edit-title-label {
+    margin-left: 5%;
 }
 
-.new-title {
-    background-color: lightseagreen;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.bookmark-title h3, .edit-rate-label h3, #rate-edit {
+    margin-right: 5%;
+}
+
+#edit-title-input, #new-title-input {
+    height: auto;
+    width: 50%;
+}
+
+#rate-edit {
+    height: auto;
+    width: 20%;
 }
 
 .bookmark-dropdown {
-    background-color: lightsalmon;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #ebebd3;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
-.edit-dropdown {
-    background-color: lightsalmon;
+.bookmark-dropdown, .edit-dropdown, .new-dropdown {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #ebebd3;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.new-dropdown {
-    background-color: lightsalmon;
+.edit-description, .edit-url, .edit-control, .new-description, .new-url, .new-control{
+    margin:3%;
 }
 
-.bookmark-edit {
-    background-color: lightpink;
+.dropdown-control {
+    margin: 5%;
 }
