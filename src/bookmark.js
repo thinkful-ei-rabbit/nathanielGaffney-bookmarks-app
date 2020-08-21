@@ -57,18 +57,12 @@ function editSubmit() {
         editObj.desc = $('#edit-dropdown-description').val();
         editObj.url = $('#edit-dropdown-url').val();
         editObj.edit = !item.edit;
-        api.updateItem(id, editObj);
+        api.updateItem(id, editObj)
             .then((item) => {
             store.findAndUpdate(id, item);
             render();
         }).catch(e => alert(e.message));
-    }
-        
     });
-    //when the edit is submitted, the information in the forms are put into
-    //an api call, which patches an existing object at the server
-    //the same values are used to update the existing local object
-    //render
 }
 
 function editRemove() {
