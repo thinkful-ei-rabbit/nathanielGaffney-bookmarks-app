@@ -42,11 +42,16 @@ function createItem(obj) {
 
 
 function updateItem(id, updateData) {
-    const newData = JSON.stringify(updateData);
+    const obj = {
+        title: updateData.title, 
+        rating: updateData.rating, 
+        desc: updateData.desc, 
+        url: updateData.url
+    }
+    const newData = JSON.stringify(obj);
     return apiCheckFetch(`${BASE_URL}/${id}`, {
         method: 'PATCH',
         headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
         },
         body: newData
@@ -55,7 +60,7 @@ function updateItem(id, updateData) {
 
 
 function removeItem(id) {
-    return apiCheckFetch(BASE_URL + id, {
+    return apiCheckFetch(`${BASE_URL}/${id}`, {
         method: 'DELETE'
     });
 };

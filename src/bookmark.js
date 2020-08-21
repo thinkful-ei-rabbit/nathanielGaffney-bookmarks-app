@@ -42,13 +42,13 @@ function editButton() {
 
 }
 
-function editSubmit(){
+function editSubmit() {
     $('.bookmark-main').on('click', '.edit-save', (event) => {
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findById(id);
-        try{
+        try {
             requireInput(item);
-        } catch (x){
+        } catch (x) {
             return alert(x);
         }
         const editObj = {};
@@ -57,13 +57,13 @@ function editSubmit(){
         editObj.desc = $('#edit-dropdown-description').val();
         editObj.url = $('#edit-dropdown-url').val();
         editObj.edit = !item.edit;
-        try{
-            api.updateItem(id, editObj);
-        } catch (e){
-            return alert(e);
-        }
-        store.findAndUpdate(id, editObj);
-        render();
+        api.updateItem(id, editObj);
+            .then((item) => {
+            store.findAndUpdate(id, item);
+            render();
+        }).catch(e => alert(e.message));
+    }
+        
     });
     //when the edit is submitted, the information in the forms are put into
     //an api call, which patches an existing object at the server
@@ -71,7 +71,7 @@ function editSubmit(){
     //render
 }
 
-function editRemove(){
+function editRemove() {
     $('.bookmark-main').on('click', '.edit-remove, .dropdown-control-remove', (event) => {
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findIndexById(id);
@@ -81,72 +81,70 @@ function editRemove(){
     });
 }
 
-function filterButton(){
+function filterButton() {
     $('.header').on('click', '#filter-start', () => {
         store.states.filter = !store.states.filter;
         render();
     });
 }
 
-function filterSelect(){
-    $('main').on('change', '#filter', () =>{
+function filterSelect() {
+    $('main').on('change', '#filter', () => {
         store.states.filterVal = $('option:selected').val();
         render();
     });
 }
 
-function addButton(){
+function addButton() {
     $('.header').on('click', '#add-new', () => {
         store.states.add = !store.states.add;
         render();
     });
 }
 
-function addSubmit(){
+function addSubmit() {
     $('.new-controls').on('click', '.new-save', () => {
-        try{
+        try {
             requireInput(store.items);
-        } catch (x){
+        } catch (x) {
             return alert(x);
         }
         const addObj = {};
-        addObj.id = cuid();
+        //addObj.id = cuid();
         addObj.title = $('#new-title-input').val();
         addObj.rating = $('#rate-new').val();
         addObj.desc = $('#new-dropdown-description').val();
         addObj.url = $('#new-dropdown-url').val();
-        addObj.edit = false;
-        try{
-            api.createItem(addObj);
-        } catch (e){
-            return alert(e);
-        }
-        store.addToStore(addObj);
-        store.states.add = false;
-        render();
+        api.createItem(addObj)
+            .then((item) => {
+                store.addToStore(item)
+                store.states.add = false;
+                render();
+            }).catch(e => alert(e.message));
+
     });
 }
 
-function cancelButton(){
+function cancelButton() {
     $('main').on('click', '.new-cancel', () => {
         store.states.add = !store.states.add;
         render();
     });
 }
 
-function requireInput(item){
-    if (store.states.add){
-            if ($('#new-title-input').val() === '') throw "Title input Required.";
-            if ($('#rate-new').val() === '') throw "Rating Required.";
-            if ($('#new-dropdown-description').val() === '') throw "Description Required.";
-            if ($('#new-dropdown-url').val() === '') throw "URL Required."
+function requireInput(item) {
+    if (store.states.add) {
+        if ($('#new-title-input').val() === '') throw "Title input Required.";
+        if ($('#rate-new').val() === '') throw "Rating Required.";
+        if ($('#new-dropdown-description').val() === '') throw "Description Required.";
+        if ($('#new-dropdown-url').val() === '') throw "URL Required."
     }
-    if (item.edit){
+    if (item.edit) {
         if ($('#edit-title-input').val() === '') throw "Title input Required.";
         if ($('#rate-edit').val() === '') throw "Rating Required.";
         if ($('#edit-dropdown-description').val() === '') throw "Description Required.";
         if ($('#edit-dropdown-url').val() === '') throw "URL Required."
-}
+    }
 }
 
 
@@ -165,8 +163,8 @@ function eventHandler() {
 function generateItemHtml(item) {
     if (item.edit) {
         let ratingArr = [];
-        for (let i = 1; i < 6; i++){
-            if (i == item.rating){
+        for (let i = 1; i < 6; i++) {
+            if (i == item.rating) {
                 ratingArr.push(`<option class='edit-option' value="${i}" selected>${i}</option>`);
             } else {
                 ratingArr.push(`<option class='edit-option' value="${i}">${i}</option>`);
@@ -186,7 +184,7 @@ function generateItemHtml(item) {
         <div class="edit-dropdown">
             <div class="edit-description">
                 <label for="edit-dropdown-description">Description:</label>
-                <textarea id="edit-dropdown-description" >${item.description}</textarea>
+                <textarea id="edit-dropdown-description" >${item.desc}</textarea>
             </div>
             <div class="edit-url">
                 <label for="edit-dropdown-url">Visit Site:</label>
@@ -210,7 +208,7 @@ function generateItemHtml(item) {
     <div class="bookmark-dropdown">
         <div class="dropdown-description">
             <h3>Description</h3>
-            <p>${item.description}</p>
+            <p>${item.desc}</p>
         </div>
         <div class="dropdown-url">
             <h3>Visit Site:</h3>
@@ -234,10 +232,10 @@ function generateItemHtml(item) {
 }
 
 function generateFilterHtml() {
-    if (store.states.filter){
+    if (store.states.filter) {
         let filterArr = [];
-        for (let i = 1; i < 6; i++){
-            if (i == store.states.filterVal){
+        for (let i = 1; i < 6; i++) {
+            if (i == store.states.filterVal) {
                 filterArr.push(`<option class='filter-option' value="${i}" selected>${i}</option>`);
             } else {
                 filterArr.push(`<option class='filter-option' value="${i}">${i}</option>`);
@@ -251,11 +249,11 @@ function generateFilterHtml() {
         ${optionStr}
        </select>
       </div>`;
-    } 
+    }
 }
 
-function generateAddHtml(){
-    if (store.states.add){
+function generateAddHtml() {
+    if (store.states.add) {
         return `<div class="bookmark-new">
         <div class="new-title">
             <label for="new-title-input"><h2>Title:</h2></label>
@@ -290,9 +288,10 @@ function generateAddHtml(){
 
 function render() {
     let items = store.items.filter(item => {
-        if(item.rating >= store.states.filterVal){
+        if (item.rating >= store.states.filterVal) {
             return item;
-        }});
+        }
+    });
     const htmlArray = items.map((item) => generateItemHtml(item));
     let htmlRender = htmlArray.join('');
     //insert html into dom at correct location
