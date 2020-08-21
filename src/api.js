@@ -1,4 +1,4 @@
-const BASE_URL = 'https://thinkful-list-api.herokuapp.com/nate-bookmark';
+const BASE_URL = 'https://cors-anywhere.herokuapp.com/https://thinkful-list-api.herokuapp.com/nate/bookmarks';
 
 
 function apiCheckFetch(...args) {
@@ -25,13 +25,13 @@ function apiCheckFetch(...args) {
 
 
 function getItems() {
-    return apiCheckFetch(`${BASE_URL}/items`);
+    return apiCheckFetch(`${BASE_URL}`);
 };
 
 
-function createItem(name) {
-    const newItem = JSON.stringify({ name });
-    return apiCheckFetch(`${BASE_URL}/items`, {
+function createItem(obj) {
+    const newItem = JSON.stringify(obj);
+    return apiCheckFetch(`${BASE_URL}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -43,9 +43,10 @@ function createItem(name) {
 
 function updateItem(id, updateData) {
     const newData = JSON.stringify(updateData);
-    return apiCheckFetch(`${BASE_URL}/items/${id}`, {
+    return apiCheckFetch(`${BASE_URL}/${id}`, {
         method: 'PATCH',
         headers: {
+            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
         },
         body: newData
@@ -54,7 +55,7 @@ function updateItem(id, updateData) {
 
 
 function removeItem(id) {
-    return apiCheckFetch(BASE_URL + '/items/' + id, {
+    return apiCheckFetch(BASE_URL + id, {
         method: 'DELETE'
     });
 };

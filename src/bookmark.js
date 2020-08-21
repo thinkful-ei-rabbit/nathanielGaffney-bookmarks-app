@@ -1,6 +1,21 @@
+
+
+
+/* TO DO
+
+change most sections to divs, only have sections on the outside most elements
+
+add api functionality to everything
+
+
+*/
+
+import cuid from 'cuid';
+
 import $ from 'jquery';
 
 import store from './store';
+import api from './api';
 
 const getItemIdFromElement = function (item) {
     return $(item)
@@ -27,70 +42,158 @@ function editButton() {
 
 }
 
+function editSubmit(){
+    $('.bookmark-main').on('click', '.edit-save', (event) => {
+        const id = getItemIdFromElement(event.currentTarget);
+        const item = store.findById(id);
+        try{
+            requireInput(item);
+        } catch (x){
+            return alert(x);
+        }
+        const editObj = {};
+        editObj.title = $('#edit-title-input').val();
+        editObj.rating = $('#rate-edit').val();
+        editObj.desc = $('#edit-dropdown-description').val();
+        editObj.url = $('#edit-dropdown-url').val();
+        editObj.edit = !item.edit;
+        try{
+            api.updateItem(id, editObj);
+        } catch (e){
+            return alert(e);
+        }
+        store.findAndUpdate(id, editObj);
+        render();
+    });
+    //when the edit is submitted, the information in the forms are put into
+    //an api call, which patches an existing object at the server
+    //the same values are used to update the existing local object
+    //render
+}
+
+function editRemove(){
+    $('.bookmark-main').on('click', '.edit-remove, .dropdown-control-remove', (event) => {
+        const id = getItemIdFromElement(event.currentTarget);
+        const item = store.findIndexById(id);
+        store.deleteAtIndex(item);
+        render();
+    });
+}
+
 function filterButton(){
-    $('.header').on('click', '.filter-start', () => {
+    $('.header').on('click', '#filter-start', () => {
         store.states.filter = !store.states.filter;
         render();
     });
 }
 
 function filterSelect(){
-    $('main').on('change', '#filter', (e) =>{
-        console.log();
+    $('main').on('change', '#filter', () =>{
         store.states.filterVal = $('option:selected').val();
-        console.log(store.states.filterVal);
-        //$('filter-option').prop('selected', false);
-        //$(e.currentTarget).prop('selected', true);
+        render();
     });
 }
 
+function addButton(){
+    $('.header').on('click', '#add-new', () => {
+        store.states.add = !store.states.add;
+        render();
+    });
+}
 
+function addSubmit(){
+    $('.new-controls').on('click', '.new-save', () => {
+        try{
+            requireInput(store.items);
+        } catch (x){
+            return alert(x);
+        }
+        const addObj = {};
+        addObj.id = cuid();
+        addObj.title = $('#new-title-input').val();
+        addObj.rating = $('#rate-new').val();
+        addObj.desc = $('#new-dropdown-description').val();
+        addObj.url = $('#new-dropdown-url').val();
+        addObj.edit = false;
+        try{
+            api.createItem(addObj);
+        } catch (e){
+            return alert(e);
+        }
+        store.addToStore(addObj);
+        store.states.add = false;
+        render();
+    });
+}
 
-//////////////
+function cancelButton(){
+    $('main').on('click', '.new-cancel', () => {
+        store.states.add = !store.states.add;
+        render();
+    });
+}
 
-// SUBMIT EDIT
-
-//MAYBE TRY API????????
-
-//////////////
+function requireInput(item){
+    if (store.states.add){
+            if ($('#new-title-input').val() === '') throw "Title input Required.";
+            if ($('#rate-new').val() === '') throw "Rating Required.";
+            if ($('#new-dropdown-description').val() === '') throw "Description Required.";
+            if ($('#new-dropdown-url').val() === '') throw "URL Required."
+    }
+    if (item.edit){
+        if ($('#edit-title-input').val() === '') throw "Title input Required.";
+        if ($('#rate-edit').val() === '') throw "Rating Required.";
+        if ($('#edit-dropdown-description').val() === '') throw "Description Required.";
+        if ($('#edit-dropdown-url').val() === '') throw "URL Required."
+}
+}
 
 
 function eventHandler() {
     itemButton();
     editButton();
+    editSubmit();
+    editRemove();
     filterButton();
     filterSelect();
+    addButton();
+    addSubmit();
+    cancelButton();
 }
 
 function generateItemHtml(item) {
     if (item.edit) {
+        let ratingArr = [];
+        for (let i = 0; i < 6; i++){
+            if (i == item.rating){
+                ratingArr.push(`<option class='edit-option' value="${i}" selected>${i}</option>`);
+            } else {
+                ratingArr.push(`<option class='edit-option' value="${i}">${i}</option>`);
+            }
+        }
+        let optionStr = ratingArr.join('');
         return `<section class="bookmark-item" data-item-id='${item.id}'>
         <section class="bookmark-edit">
         <section class="edit-title">
             <label for="edit-title-input">Title</label>
-            <input type="text" id="edit-title-input" placeholder="input title">
+            <input type="text" id="edit-title-input" value="${item.title}">
             <label for="rate-edit">Rating:</label>
             <select name="rate-edit" id="rate-edit">
-                <option class='filter-0' value="0">0 Stars</option>
-                <option class='filter-option' value="1">1 Star</option>
-                <option class='filter-option' value="2">2 Stars</option>
-                <option class='filter-option' value="3">3 Stars</option>
-                <option class='filter-option' value="4">4 Stars</option>
-                <option class='filter-option' value="5">5 Stars</option>
+                ${optionStr}
             </select>
         </section>
         <section class="edit-dropdown">
             <div class="edit-description">
                 <label for="edit-dropdown-description">Description:</label>
-                <textarea id="edit-dropdown-description" placeholder="input description"></textarea>
+                <textarea id="edit-dropdown-description" >${item.description}</textarea>
             </div>
             <div class="edit-url">
                 <label for="edit-dropdown-url">Visit Site:</label>
-                <input type="text" id="edit-dropdown-url" placeholder="input url">
+                <input type="text" id="edit-dropdown-url" value="${item.url}">
             </div>
             <div class="edit-control">
-                <button>Save Bookmark</button>
-                <button>Remove Bookmark</button>
+                <button class="edit-save">Save Bookmark</button>
+                <button class="edit-remove">Remove Bookmark</button>
             </div>
         </section>
     </section>
@@ -149,19 +252,56 @@ function generateFilterHtml() {
     } 
 }
 
+function generateAddHtml(){
+    if (store.states.add){
+        return `<section class="bookmark-new">
+        <section class="new-title">
+            <label for="new-title-input">Title:</label>
+            <input type="text" id="new-title-input" placeholder="input title">
+            <label for="rate-new">Rating:</label>
+            <select name="rate-new" id="rate-new">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </section>
+        <section class="new-dropdown">
+            <div class="new-description">
+                <label for="new-dropdown-description">Description:</label>
+                <textarea id="new-dropdown-description" placeholder="input description"></textarea>
+            </div>
+            <div class="new-url">
+                <label for="new-dropdown-url">Visit Site:</label>
+                <input type="text" id="new-dropdown-url" placeholder="input url">
+            </div>
+            <div class="new-control">
+                <button class="new-save">Save Bookmark</button>
+                <button class="new-cancel">Cancel</button>
+            </div>
+        </section>
+    </section>`;
+    }
+}
+
 
 function render() {
-    let items = store.items;
-    // apply filter to 'items' and remove the ones that dont pass through
-    // create html for each item and string them together
+    let items = store.items.filter(item => {
+        if(item.rating >= store.states.filterVal){
+            return item;
+        }});
     const htmlArray = items.map((item) => generateItemHtml(item));
     let htmlRender = htmlArray.join('');
     //insert html into dom at correct location
+
     $('.filter-controls').empty();
-    $('.filter-controls').append(generateFilterHtml())
+    $('.filter-controls').append(generateFilterHtml());
+    $('.new-controls').empty();
+    $('.new-controls').append(generateAddHtml());
     $('.bookmark-main').empty();
     $('.bookmark-main').append(htmlRender);
-    console.log(store.states.filterVal);
 }
 
 
