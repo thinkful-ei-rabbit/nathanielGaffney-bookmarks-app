@@ -57,6 +57,10 @@ header {
     padding: 2%;
 }
 
+.bookmark-title, button, select{
+    cursor: pointer;
+}
+
 .bookmark-title h2, .edit-title-label {
     margin-left: 5%;
 }

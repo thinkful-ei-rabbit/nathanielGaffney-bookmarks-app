@@ -104,7 +104,6 @@ function addSubmit() {
             return alert(x);
         }
         const addObj = {};
-        //addObj.id = cuid();
         addObj.title = $('#new-title-input').val();
         addObj.rating = $('#rate-new').val();
         addObj.desc = $('#new-dropdown-description').val();
