@@ -58,8 +58,8 @@ function editSubmit() {
         editObj.url = $('#edit-dropdown-url').val();
         editObj.edit = !item.edit;
         api.updateItem(id, editObj)
-            .then((item) => {
-            store.findAndUpdate(id, item);
+            .then(() => {
+            store.findAndUpdate(id, editObj);
             render();
         }).catch(e => alert(e.message));
     });
