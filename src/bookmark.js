@@ -1,17 +1,3 @@
-
-
-
-/* TO DO
-
-change most sections to divs, only have sections on the outside most elements
-
-add api functionality to everything
-
-
-*/
-
-import cuid from 'cuid';
-
 import $ from 'jquery';
 
 import store from './store';
@@ -24,7 +10,7 @@ const getItemIdFromElement = function (item) {
 };
 
 function itemButton() {
-    $('.bookmark-main').on('click', '.bookmark-title', event => {
+    $('main').on('click', '.bookmark-title', event => {
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findById(id);
         store.findAndUpdate(id, { expanded: !item.expanded });
@@ -33,7 +19,7 @@ function itemButton() {
 }
 
 function editButton() {
-    $('.bookmark-main').on('click', '.dropdown-control-edit', event => {
+    $('main').on('click', '.dropdown-control-edit', event => {
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findById(id);
         store.findAndUpdate(id, { edit: !item.edit });
@@ -43,7 +29,8 @@ function editButton() {
 }
 
 function editSubmit() {
-    $('.bookmark-main').on('click', '.edit-save', (event) => {
+    $('main').on('click', '.edit-save', (event) => {
+        event.preventDefault();
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findById(id);
         try {
@@ -59,14 +46,14 @@ function editSubmit() {
         editObj.edit = !item.edit;
         api.updateItem(id, editObj)
             .then(() => {
-            store.findAndUpdate(id, editObj);
-            render();
-        }).catch(e => alert(e.message));
+                store.findAndUpdate(id, editObj);
+                render();
+            }).catch(e => alert(e.message));
     });
 }
 
 function editRemove() {
-    $('.bookmark-main').on('click', '.edit-remove, .dropdown-control-remove', (event) => {
+    $('main').on('click', '.edit-remove, .dropdown-control-remove', (event) => {
         const id = getItemIdFromElement(event.currentTarget);
         const item = store.findIndexById(id);
         api.removeItem(id);
@@ -97,7 +84,8 @@ function addButton() {
 }
 
 function addSubmit() {
-    $('.new-controls').on('click', '.new-save', () => {
+    $('main').on('click', '.new-save', (event) => {
+        event.preventDefault();
         try {
             requireInput(store.items);
         } catch (x) {
@@ -153,6 +141,8 @@ function eventHandler() {
     cancelButton();
 }
 
+let optionStr = '';
+
 function generateItemHtml(item) {
     if (item.edit) {
         let ratingArr = [];
@@ -163,9 +153,18 @@ function generateItemHtml(item) {
                 ratingArr.push(`<option class='edit-option' value="${i}">${i}</option>`);
             }
         }
-        let optionStr = ratingArr.join('');
-        return `<div class="bookmark-item" data-item-id='${item.id}'>
-        <div class="bookmark-edit">
+        optionStr = ratingArr.join('');
+        return generateItemDropEdit(item);
+    } else if (item.expanded) {
+        return generateItemDrop(item);
+    } else {
+        return generateItemNoDrop(item);
+    }
+}
+
+function generateItemDropEdit(item){
+    return `<div class="bookmark-item" data-item-id='${item.id}'>
+    <form class="bookmark-edit">
         <div class="edit-title">
             <label class="edit-title-label" for="edit-title-input"><h2>Title</h2></label>
             <input type="text" id="edit-title-input" value="${item.title}">
@@ -184,14 +183,16 @@ function generateItemHtml(item) {
                 <input type="text" id="edit-dropdown-url" value="${item.url}">
             </div>
             <div class="edit-control">
-                <button class="edit-save">Save Bookmark</button>
+                <button type='submit' class="edit-save">Save Bookmark</button>
                 <button class="edit-remove">Remove Bookmark</button>
             </div>
         </div>
-    </div>
-    </div>`
-    } else if (item.expanded) {
-        return `<section class="bookmark-item" data-item-id='${item.id}'>
+</form>
+</div>`
+}
+
+function generateItemDrop(item) {
+    return `<section class="bookmark-item" data-item-id='${item.id}'>
     <div class="bookmark-title">
         <h2>${item.title}</h2>
         <h3>Rating: ${item.rating} out of 5</h3>
@@ -213,15 +214,16 @@ function generateItemHtml(item) {
         </div>
     </div>
 
-</div>`;
-    } else {
-        return `<div class="bookmark-item" data-item-id='${item.id}'>
+</div>`
+}
+
+function generateItemNoDrop(item) {
+    return `<div class="bookmark-item" data-item-id='${item.id}'>
     <div class="bookmark-title">
         <h2>${item.title}</h2>
         <h3>Rating: ${item.rating} out of 5</h3>
     </div>
     </div>`
-    }
 }
 
 function generateFilterHtml() {
@@ -247,7 +249,7 @@ function generateFilterHtml() {
 
 function generateAddHtml() {
     if (store.states.add) {
-        return `<div class="bookmark-new">
+        return `<form class="bookmark-new">
         <div class="new-title">
             <label for="new-title-input"><h2>Title:</h2></label>
             <input type="text" id="new-title-input" placeholder="input title">
@@ -270,11 +272,11 @@ function generateAddHtml() {
                 <input type="text" id="new-dropdown-url" placeholder="input url">
             </div>
             <div class="new-control">
-                <button class="new-save">Save Bookmark</button>
+                <button type='submit' class="new-save">Save Bookmark</button>
                 <button class="new-cancel">Cancel</button>
             </div>
         </div>
-    </div>`;
+    </form>`;
     }
 }
 
@@ -289,12 +291,10 @@ function render() {
     let htmlRender = htmlArray.join('');
     //insert html into dom at correct location
 
-    $('.filter-controls').empty();
-    $('.filter-controls').append(generateFilterHtml());
-    $('.new-controls').empty();
-    $('.new-controls').append(generateAddHtml());
-    $('.bookmark-main').empty();
-    $('.bookmark-main').append(htmlRender);
+    $('main').empty();
+    $('main').append(generateFilterHtml());
+    $('main').append(generateAddHtml());
+    $('main').append(htmlRender);
 }
 
 
